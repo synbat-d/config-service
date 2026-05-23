@@ -25,11 +25,14 @@ management:
     web:
       exposure:
         # Makes the health endpoint available over HTTP
-        include: health
+        include: health, refresh
   endpoint:
     health:
       # Shows "UP" or "DOWN" (useful for debugging)
       show-details: always
+      show-components: always
+      probes:
+        enabled: true
   health:
     # Optional: Disables checks that aren't critical for startup
     # (e.g., if you don't want it to fail just because Git is slow)
