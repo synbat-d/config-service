@@ -25,7 +25,7 @@ management:
     web:
       exposure:
         # Makes the health endpoint available over HTTP
-        include: health, refresh
+        include: health, refresh, prometheus
   endpoint:
     health:
       # Shows "UP" or "DOWN" (useful for debugging)
@@ -38,3 +38,7 @@ management:
     # (e.g., if you don't want it to fail just because Git is slow)
     defaults:
       enabled: true
+
+  metrics:
+    tags:
+      application: ${spring.application.name}
