@@ -14,12 +14,17 @@ java {
 	}
 }
 
+configurations {
+	opentelemetryAgent
+}
+
 repositories {
 	mavenCentral()
 }
 
 ext {
 	set('springCloudVersion', "2025.0.1")
+	set('otelVersion', "1.17.0")
 }
 
 dependencies {
@@ -28,6 +33,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	opentelemetryAgent "io.opentelemetry.javaagent:opentelemetry-javaagent:${otelVersion}"
 }
 
 dependencyManagement {
@@ -38,4 +44,14 @@ dependencyManagement {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.register('copyAgent', Copy) {
+	from configurations.opentelemetryAgent
+	into layout.buildDirectory.dir("agent")
+	rename { "opentelemetry-javaagent.jar" }
+}
+
+tasks.named('bootJar') {
+	dependsOn tasks.named('copyAgent')
 }
